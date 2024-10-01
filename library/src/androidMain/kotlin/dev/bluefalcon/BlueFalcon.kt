@@ -315,7 +315,7 @@ actual class BlueFalcon actual constructor(
             }
             gatt?.device?.let { bluetoothDevice ->
                 gatt.services.let { services ->
-                    log.debug("onServicesDiscovered -> $services")
+                    log.debug("onServicesDiscovered -> ${services.map { it.uuid.toString() } }")
                     val bluetoothPeripheral = BluetoothPeripheral(bluetoothDevice)
                     bluetoothPeripheral._servicesFlow.tryEmit(services.map {  BluetoothService(it) })
                     delegates.forEach {

@@ -1,5 +1,6 @@
 package dev.bluefalcon
 
+import kotlinx.cinterop.ObjCSignatureOverride
 import platform.CoreBluetooth.*
 import platform.Foundation.NSError
 import platform.Foundation.NSNumber
@@ -43,6 +44,27 @@ class PeripheralDelegate constructor(
         }
     }
 
+    @ObjCSignatureOverride()
+    override fun peripheral(
+        peripheral: CBPeripheral,
+        didDiscoverDescriptorsForCharacteristic: CBCharacteristic,
+        error: NSError?
+    ) {
+        if (error != null) {
+            log.error("Error with characteristic discovery ${didDiscoverDescriptorsForCharacteristic}")
+        } else {
+            log.info("didDiscoverDescriptorsForCharacteristic")
+        }
+        val device = BluetoothPeripheral(peripheral, rssiValue = null)
+//        blueFalcon.delegates.forEach {
+//            it.didDiscoverDescriptors(device)
+//        }
+//        BluetoothService(didDiscoverDescriptorsForCharacteristic).characteristics.forEach {
+//            peripheral.discoverDescriptorsForCharacteristic(it.characteristic)
+//        }
+    }
+
+    @ObjCSignatureOverride()
     override fun peripheral(
         peripheral: CBPeripheral,
         didUpdateValueForCharacteristic: CBCharacteristic,
@@ -61,6 +83,7 @@ class PeripheralDelegate constructor(
             )
         }
     }
+
     override fun peripheral(
         peripheral: CBPeripheral,
         didWriteValueForDescriptor: CBDescriptor,
